@@ -58,42 +58,26 @@ ll modinv(ll a, ll mod) {
     return modpow(a, mod - 2, mod); // Assumes mod is prime
 }
 
-void solve(){
-    int n;
-    cin >> n;
-    
-    vi sizes(n);
-    for(int i=0; i<n; i++){
-        cin >> sizes[i];
-    }
-
-    vector<vi> divisors(n+1);
-    for(int i=1; i<=n; i++){
-        for(int j=i; j <= n; j+=i){
-            divisors[j].pb(i);
-        }
-    }
-
-    vi dp(n+1,1);
-    for(int i=1; i<=n; i++){
-        for(auto j: divisors[i]){
-            if(sizes[i-1] > sizes[j-1]) dp[i] = max(dp[i], dp[j]+1);
-        }
-    }
-
-    int ans = 0;
-    for(int i=0;i<=n;i++) ans = max(ans, dp[i]);
-
-    cout << ans << endl;
-}
-
 int main() {
     setIO();
 
-    int t;
-    cin >> t;
-    while(t--){
-        solve();
+    int n;
+    cin >> n;
+
+    vll curr(4,0);
+    vll prev(4,0);
+
+    prev[0] = 1;
+    
+    for(int i=1; i<=n; i++){
+        curr[0] = (prev[1]+prev[2]+prev[3]) % MOD;
+        curr[1] = (prev[0]+prev[2]+prev[3]) % MOD;
+        curr[2] = (prev[0]+prev[1]+prev[3]) % MOD;
+        curr[3] = (prev[0]+prev[1]+prev[2]) % MOD;
+
+        swap(curr, prev);
     }
+
+    cout << prev[0] << endl;
     return 0;
 }

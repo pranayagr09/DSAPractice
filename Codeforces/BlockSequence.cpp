@@ -61,30 +61,27 @@ ll modinv(ll a, ll mod) {
 void solve(){
     int n;
     cin >> n;
-    
-    vi sizes(n);
+
+    vector<int> nums;
     for(int i=0; i<n; i++){
-        cin >> sizes[i];
+        int num;
+        cin >> num;
+        nums.push_back(num);
+    } 
+
+    vector<int> dp(n,0);
+    dp[n-1] = 0;
+
+    for(int i=n-2; i >= 0; i--){
+        int tmp = 0;
+        if(i + nums[i] == n-1) tmp = 1 + nums[i];
+        else if(i + nums[i] < n-1) tmp = 1 + nums[i] + dp[i+nums[i]+1];
+
+        dp[i] = max(dp[i+1],tmp);
     }
 
-    vector<vi> divisors(n+1);
-    for(int i=1; i<=n; i++){
-        for(int j=i; j <= n; j+=i){
-            divisors[j].pb(i);
-        }
-    }
-
-    vi dp(n+1,1);
-    for(int i=1; i<=n; i++){
-        for(auto j: divisors[i]){
-            if(sizes[i-1] > sizes[j-1]) dp[i] = max(dp[i], dp[j]+1);
-        }
-    }
-
-    int ans = 0;
-    for(int i=0;i<=n;i++) ans = max(ans, dp[i]);
-
-    cout << ans << endl;
+    cout << n - dp[0] << endl;
+    return;
 }
 
 int main() {
@@ -92,6 +89,7 @@ int main() {
 
     int t;
     cin >> t;
+
     while(t--){
         solve();
     }
